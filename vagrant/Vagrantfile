@@ -8,6 +8,13 @@ box = "ubuntu/focal64"
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+  # WSL
+  config.vm.synced_folder ".", "/vagrant",disabled: true
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+    vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
+  end
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.

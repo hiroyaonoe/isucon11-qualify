@@ -1,7 +1,6 @@
 #! /bin/bash -ex
 
-echo "" > /var/log/nginx/access.log
+echo "" | sudo tee /var/log/nginx/access.log > /dev/null
 
 sudo rm /var/log/mysql/slow.log
-echo "Password is isucon"
-mysqladmin -p flush-logs
+mysqladmin -p flush-logs -pisucon

@@ -43,7 +43,7 @@ const (
 	scoreConditionLevelCritical = 1
 	postIsuConditionBatchSize   = 65535
 	postIsuConditionChanCap     = 65535
-	postIsuConditionWaitTime    = 500 * time.Millisecond // 0.5s
+	postIsuConditionWaitTime    = 990 * time.Millisecond // 0.5s
 )
 
 var (

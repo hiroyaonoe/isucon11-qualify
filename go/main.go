@@ -44,7 +44,7 @@ const (
 	postIsuConditionBatchSize   = 65535
 	postIsuConditionChanCap     = 65535
 	postIsuConditionWaitTime    = 990 * time.Millisecond
-	cacheTrendInterval          = 100 * time.Millisecond
+	cacheTrendInterval          = 1000 * time.Millisecond
 )
 
 var (

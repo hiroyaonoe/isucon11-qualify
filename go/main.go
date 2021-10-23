@@ -43,6 +43,7 @@ const (
 	scoreConditionLevelCritical = 1
 	postIsuConditionBatchSize   = 65535
 	postIsuConditionChanCap     = 65535
+	postIsuConditionWaitTime    = 990 * time.Millisecond // 0.5s
 )
 
 var (
@@ -1230,8 +1231,7 @@ func postIsuCondition(c echo.Context) error {
 }
 
 func insertIsuConditionByQueueing() {
-	waitTime := 500 * time.Millisecond // 0.5s
-	t := time.NewTicker(waitTime)
+	t := time.NewTicker(postIsuConditionWaitTime)
 	var isuConditionBuffer []IsuCondition
 	var err error
 	for {

@@ -1244,6 +1244,10 @@ func insertIsuConditionByQueueing() {
 			}
 		}
 
+		if len(isuConditionBuffer) == 0 {
+			continue
+		}
+
 		_, err = db.NamedExec(
 			"INSERT INTO `isu_condition`"+
 				"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `condition_level`, `message`)"+

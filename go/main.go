@@ -1096,7 +1096,7 @@ func calculateConditionLevel(condition string) (string, error) {
 // ISUの性格毎の最新のコンディション情報
 func getTrend(c echo.Context) error {
 	nowTime := time.Now()
-	if duration := cacheTrendTime.Sub(nowTime); duration < cacheTrendInterval && !cacheTrendTime.IsZero() {
+	if duration := nowTime.Sub(cacheTrendTime); duration < cacheTrendInterval && !cacheTrendTime.IsZero() {
 		return c.JSON(http.StatusOK, cacheTrendResponse)
 	}
 

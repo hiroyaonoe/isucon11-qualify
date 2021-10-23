@@ -43,7 +43,8 @@ const (
 	scoreConditionLevelCritical = 1
 	postIsuConditionBatchSize   = 65535
 	postIsuConditionChanCap     = 65535
-	postIsuConditionWaitTime    = 990 * time.Millisecond // 0.5s
+	postIsuConditionWaitTime    = 990 * time.Millisecond
+	cacheTrendInterval          = 100 * time.Millisecond
 )
 
 var (
@@ -56,6 +57,9 @@ var (
 	postIsuConditionTargetBaseURL string // JIAへのactivate時に登録する，ISUがconditionを送る先のURL
 
 	postIsuConditionChan = make(chan IsuCondition, postIsuConditionChanCap)
+
+	cacheTrendResponse = []TrendResponse{}
+	cacheTrendTime = time.Time{}
 )
 
 type Config struct {
@@ -1095,6 +1099,11 @@ func calculateConditionLevel(condition string) (string, error) {
 // GET /api/trend
 // ISUの性格毎の最新のコンディション情報
 func getTrend(c echo.Context) error {
+	nowTime := time.Now()
+	if duration := cacheTrendTime.Sub(nowTime); duration < cacheTrendInterval && !cacheTrendTime.IsZero() {
+		return c.JSON(http.StatusOK, cacheTrendResponse)
+	}
+
 	characterList := []Isu{}
 	err := db.Select(&characterList, "SELECT `character` FROM `isu` GROUP BY `character`")
 	if err != nil {
@@ -1169,6 +1178,8 @@ func getTrend(c echo.Context) error {
 				Critical:  characterCriticalIsuConditions,
 			})
 	}
+	cacheTrendTime = nowTime
+	cacheTrendResponse = res
 
 	return c.JSON(http.StatusOK, res)
 }

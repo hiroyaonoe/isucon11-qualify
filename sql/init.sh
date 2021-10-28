@@ -12,3 +12,4 @@ cd $CURRENT_DIR
 
 cat 0_Schema.sql 1_InitData.sql 2_patch.sql | mysql --defaults-file=/dev/null -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER $MYSQL_DBNAME
 /home/isucon/local/go/bin/go run 3_patch.go
+cat 4_patch.sql | mysql --defaults-file=/dev/null -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER $MYSQL_DBNAME

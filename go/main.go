@@ -13,6 +13,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -33,6 +34,7 @@ const (
 	frontendContentsPath        = "../public"
 	jiaJWTSigningKeyPath        = "../ec256-public.pem"
 	defaultIconFilePath         = "../NoImage.jpg"
+	iconDirectoryPath           = "../icon"
 	defaultJIAServiceURL        = "http://localhost:5000"
 	mysqlErrNumDuplicateEntry   = 1062
 	conditionLevelInfo          = "info"
@@ -659,6 +661,12 @@ func postIsu(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	err = saveIcon(jiaIsuUUID, image)
+	if err != nil {
+		c.Logger().Error(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
@@ -666,6 +674,18 @@ func postIsu(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, isu)
+}
+
+func saveIcon(jiaIsuUUID string, image []byte) error {
+	iconFilePath := filepath.Join(iconDirectoryPath, jiaIsuUUID)
+	f, err := os.Create(iconFilePath)
+	defer f.Close()
+	if err != nil {
+		return fmt.Errorf("failed to saveIcon:%w", err)
+	}
+
+	_, err = f.Write(image)
+	return err
 }
 
 // GET /api/isu/:jia_isu_uuid

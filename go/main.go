@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"net"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -47,6 +48,7 @@ const (
 	postIsuConditionChanCap     = 65535
 	postIsuConditionWaitTime    = 990 * time.Millisecond
 	cacheTrendInterval          = 1000 * time.Millisecond
+	socketFile                  = "/var/run/isucondition.sock"
 )
 
 var (
@@ -268,8 +270,19 @@ func main() {
 	go insertIsuConditionByQueueing()
 	go loopCalcTrend()
 
-	serverPort := fmt.Sprintf(":%v", getEnv("SERVER_APP_PORT", "3000"))
-	e.Logger.Fatal(e.Start(serverPort))
+	os.Remove(socketFile)
+	l, err := net.Listen("unix", socketFile)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	err = os.Chmod(socketFile, 0777)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	e.Listener = l
+	e.Logger.Fatal(e.Start(""))
 }
 
 func getSession(r *http.Request) (*sessions.Session, error) {

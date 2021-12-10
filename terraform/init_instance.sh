@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LOG_OUT=/tmp/stdout.log
+LOG_ERR=/tmp/stderr.log
+
+exec 1> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
+
 sudo gpasswd -a isucon sudo
 sudo su - isucon
 cd /home/isucon
@@ -14,7 +20,7 @@ wget https://github.com/isucon/isucon11-qualify/releases/download/public/1_InitD
 
 for file in `find etc`; do
     path=/${file}
-    cp file path
+    sudo cp file path
 done
 
 sudo systemctl restart isucondition.go.service

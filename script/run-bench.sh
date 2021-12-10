@@ -1,9 +1,9 @@
 #! /bin/bash -ex
 
-SERVER1_IP=172.31.33.136
-SERVER2_IP=172.31.45.3
-SERVER3_IP=172.31.35.116
-BENCH_IP=172.31.32.80
+SERVER1_IP=192.168.0.11
+SERVER2_IP=192.168.0.12
+SERVER3_IP=192.168.0.13
+BENCH_IP=192.168.0.14
 
 cd ~/bench
 # ./bench -tls -target=localhost -all-addresses=localhost -jia-service-url http://localhost:5000

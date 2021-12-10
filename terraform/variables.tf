@@ -13,3 +13,8 @@ variable "isucon11q_ami" {
 locals {
   init_instance_script = file("${path.module}/init_instance.sh")
 }
+
+variable "my_home_ip" {
+  description = "自宅のIPアドレス"
+  type        = string
+}

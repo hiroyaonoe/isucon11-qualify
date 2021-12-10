@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LOG_OUT=/tmp/stdout.log
+LOG_ERR=/tmp/stderr.log
+
+exec 1> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
+
 sudo gpasswd -a isucon sudo
 sudo su - isucon
 cd /home/isucon
@@ -14,15 +20,8 @@ wget https://github.com/isucon/isucon11-qualify/releases/download/public/1_InitD
 
 for file in `find etc`; do
     path=/${file}
-    cp file path
+    sudo cp file path
 done
-
-sudo systemctl restart isucondition.go.service
-sudo systemctl restart nginx.service
-sudo systemctl restart mysql.service
-
-sudo systemctl disable jiaapi-mock.service
-sudo systemctl stop jiaapi-mock.service
 
 # alp
 wget https://github.com/tkuchiki/alp/releases/download/v1.0.8/alp_linux_amd64.zip
@@ -36,3 +35,13 @@ wget https://downloads.percona.com/downloads/percona-toolkit/3.3.1/binary/debian
 sudo apt-get install libdbd-mysql-perl libdbi-perl libio-socket-ssl-perl libnet-ssleay-perl libterm-readkey-perl
 sudo dpkg -i percona-toolkit_3.3.1-1.focal_amd64.deb
 rm percona-toolkit_3.3.1-1.focal_amd64.deb
+
+
+cd ~/webapp/go
+go build
+sudo systemctl restart isucondition.go.service
+sudo systemctl restart nginx.service
+sudo systemctl restart mysql.service
+
+sudo systemctl disable jiaapi-mock.service
+sudo systemctl stop jiaapi-mock.service

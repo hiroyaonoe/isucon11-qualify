@@ -91,3 +91,19 @@ resource "aws_security_group" "sg_my_home_ssh" {
     Name = "terraform-isucon11q"
   }
 }
+
+output "bench_public_ip" {
+  value = aws_instance.bench.public_ip
+}
+
+output "webapp1_public_ip" {
+  value = aws_instance.webapp1.public_ip
+}
+
+output "webapp2_public_ip" {
+  value = aws_instance.webapp2.public_ip
+}
+
+output "webapp3_public_ip" {
+  value = aws_instance.webapp3.public_ip
+}

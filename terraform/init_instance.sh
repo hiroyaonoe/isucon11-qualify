@@ -18,9 +18,9 @@ git clone https://github.com/hiroyaonoe/isucon11-qualify.git webapp
 cd webapp
 wget https://github.com/isucon/isucon11-qualify/releases/download/public/1_InitData.sql -P ./sql/
 
-for file in `find etc`; do
-    path=/${file}
-    sudo cp file path
+for file in `find etc -type f`; do
+    path=/$file
+    sudo cp $file $path
 done
 
 # alp
@@ -36,8 +36,7 @@ sudo apt-get install libdbd-mysql-perl libdbi-perl libio-socket-ssl-perl libnet-
 sudo dpkg -i percona-toolkit_3.3.1-1.focal_amd64.deb
 rm percona-toolkit_3.3.1-1.focal_amd64.deb
 
-
-cd ~/webapp/go
+cd go
 go build
 sudo systemctl restart isucondition.go.service
 sudo systemctl restart nginx.service

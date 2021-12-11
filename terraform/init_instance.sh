@@ -1,9 +1,10 @@
 #!/bin/bash
 
 LOG_OUT=/tmp/stdout.log
+LOG_ERR=/tmp/stderr.log
 
 exec 1> >(tee -a $LOG_OUT)
-exec 2> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
 
 sudo gpasswd -a isucon sudo
 sudo su - isucon

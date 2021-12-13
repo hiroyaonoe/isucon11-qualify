@@ -54,4 +54,7 @@ sudo systemctl restart mysql.service
 
 sudo systemctl disable jiaapi-mock.service
 sudo systemctl stop jiaapi-mock.service
+
+# mariadb
+echo "GRANT all ON *.* TO isucon@\"%\" identified by 'isucon' with grant option;" | sudo mysql --defaults-file=/dev/null
 EOF

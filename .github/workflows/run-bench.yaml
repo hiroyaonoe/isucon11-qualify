@@ -37,6 +37,6 @@ jobs:
             await github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
-              repo: context.repo.name,
+              repo: context.repo.repo,
               body: `This branch is ${{ steps.set-target-branch.outputs.result }}`
             })

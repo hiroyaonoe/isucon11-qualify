@@ -42,6 +42,8 @@ rm percona-toolkit_3.3.1-1.focal_amd64.deb
 # unix domain socket
 sudo chmod 777 /var/run/
 
+mkdir icon
+
 cd go
 pwd
 /home/isucon/local/go/bin/go build

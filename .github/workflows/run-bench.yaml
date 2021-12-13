@@ -13,7 +13,8 @@ jobs:
 
     steps:
       # コメントが付けられたPRのブランチを取得
-      - uses: actions/github-script@v2
+      - name: Get PR's branch
+        uses: actions/github-script@v2
         id: set-target-branch
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -26,7 +27,8 @@ jobs:
             })
             return pull_request.data.head.ref
       # git checkout
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           ref: ${{ steps.set-target-branch.outputs.result }}
       # branch名をコメントする

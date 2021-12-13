@@ -39,3 +39,4 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.name,
               body: `This branch is ${{ steps.set-target-branch.outputs.result }}`
+            })

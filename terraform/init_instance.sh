@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 LOG_OUT=/tmp/stdout.log
 LOG_ERR=/tmp/stderr.log
@@ -6,9 +6,10 @@ LOG_ERR=/tmp/stderr.log
 exec 1> >(tee -a $LOG_OUT)
 exec 2>>$LOG_ERR
 
-sudo gpasswd -a isucon sudo
-sudo su - isucon
-cd /home/isucon
+gpasswd -a isucon sudo
+su - isucon <<- 'EOF'
+whoami
+pwd
 
 curl https://github.com/hiroyaonoe.keys >> ./.ssh/authorized_keys
 
@@ -16,11 +17,12 @@ rm -rf webapp
 git clone https://github.com/hiroyaonoe/isucon11-qualify.git webapp
 
 cd webapp
+pwd
 wget https://github.com/isucon/isucon11-qualify/releases/download/public/1_InitData.sql -P ./sql/
 
 for file in `find etc -type f`; do
-    path=/$file
-    sudo cp $file $path
+	newfile=/$file
+	sudo cp $file $newfile
 done
 
 # alp
@@ -32,15 +34,21 @@ rm alp_linux_amd64.zip
 
 # pt-query-digest
 wget https://downloads.percona.com/downloads/percona-toolkit/3.3.1/binary/debian/focal/x86_64/percona-toolkit_3.3.1-1.focal_amd64.deb
-sudo apt-get install libdbd-mysql-perl libdbi-perl libio-socket-ssl-perl libnet-ssleay-perl libterm-readkey-perl
+DEBIAN_FRONTEND=noninteractive
+sudo apt -y install libdbd-mysql-perl libdbi-perl libio-socket-ssl-perl libnet-ssleay-perl libterm-readkey-perl
 sudo dpkg -i percona-toolkit_3.3.1-1.focal_amd64.deb
 rm percona-toolkit_3.3.1-1.focal_amd64.deb
 
+# unix domain socket
+sudo chmod 777 /var/run/
+
 cd go
-go build
+pwd
+/home/isucon/local/go/bin/go build
 sudo systemctl restart isucondition.go.service
 sudo systemctl restart nginx.service
 sudo systemctl restart mysql.service
 
 sudo systemctl disable jiaapi-mock.service
 sudo systemctl stop jiaapi-mock.service
+EOF

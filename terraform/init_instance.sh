@@ -24,6 +24,7 @@ for file in `find etc -type f`; do
 	newfile=/$file
 	sudo cp $file $newfile
 done
+cp env.sh ../env.sh
 
 # alp
 wget https://github.com/tkuchiki/alp/releases/download/v1.0.8/alp_linux_amd64.zip

@@ -8,7 +8,7 @@ on:
 jobs:
   run-bench:
     # add comment of pull request && comment is KEYWORD
-    if: (github.event.issue.pull_request != null) && github.event.comment.body == '/bench'
+    if: (github.event.issue.pull_request != null) && (contains(github.event.comment.body, '/bench'))
     runs-on: ubuntu-latest
 
     steps:

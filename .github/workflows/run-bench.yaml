@@ -169,21 +169,37 @@ jobs:
           https://github.com/${{ github.repository }}/commit/${{ steps.get-target-commit.outputs.result }}
           ## Result
           ### Benchmark
+          <details>
+
           ```
           ${{ needs.run-bench.outputs.bench-result }}
           ```
+
+          </details>
           ### Alp of webapp1
+          <details>
+
           ```
           ${{ needs.run-bench.outputs.webapp1-result }}
           ```
+
+          </details>
           ### Slow query of webapp2
+          <details>
+
           ```
           ${{ needs.run-bench.outputs.webapp2-result }}
           ```
+          
+          </details>
           ### Alp of webapp3
+          <details>
+          
           ```
           ${{ needs.run-bench.outputs.webapp3-result }}
           ```
+          
+          </details>
           "
           
           comment="${comment//$'\n'/\\n}"

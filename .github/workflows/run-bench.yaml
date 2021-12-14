@@ -91,6 +91,7 @@ jobs:
               echo $i
               ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- : | result=$?
               if [ "$result" = 0 ]; then
+                echo "ok"
                 break
               else
                 echo $result

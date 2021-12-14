@@ -89,12 +89,11 @@ jobs:
           for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
             for i in `seq 10`; do
               echo $i
-              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- : | result=$?
-              if [ "$result" = 0 ]; then
+              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- : || result=$?
+              echo $result
+              if [ $result = 0 ]; then
                 echo "ok"
                 break
-              else
-                echo $result
               fi
               sleep 3
             done

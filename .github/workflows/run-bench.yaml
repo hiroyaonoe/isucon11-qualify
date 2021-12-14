@@ -89,11 +89,9 @@ jobs:
           for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
             for i in `seq 5`; do
               echo $i
-              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- :
-              if [ $? = 0 ]; then
+              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- : || $result=$?
+              if [ $result = 0 ]; then
                 break
-              else
-                echo "Failed to ssh"
               fi
               sleep 5
             done

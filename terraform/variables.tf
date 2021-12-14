@@ -14,7 +14,7 @@ locals {
   init_instance_script = file("${path.module}/init_instance.sh")
 }
 
-variable "my_home_ip" {
-  description = "自宅のIPアドレス"
+variable "allow_ssh_cidr" {
+  description = "sshを許可するIPアドレス"
   type        = string
 }

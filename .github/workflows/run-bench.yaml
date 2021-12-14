@@ -105,7 +105,8 @@ jobs:
           ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
 
           bench_result=$(cat bench_result.txt)
-          bench_result="${bench_result//$'\n'/\\n}"
+          bench_result=${bench_result//$'\n'/\\n}
+          bench_result=${bench_result//$'"'/'\"'}
           echo "::set-output name=result::$bench_result"
 
       - name: Get metrics of webapp1
@@ -114,7 +115,8 @@ jobs:
           ssh isucon@${{ steps.apply-terraform.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
           
           webapp1_result=$(cat webapp1_result.txt)
-          webapp1_result="${webapp1_result//$'\n'/\\n}"
+          webapp1_result=${webapp1_result//$'\n'/\\n}
+          webapp1_result=${webapp1_result//$'"'/'\"'}
           echo "::set-output name=result::$webapp1_result"
 
       - name: Get metrics of webapp2
@@ -123,7 +125,8 @@ jobs:
           ssh isucon@${{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
           
           webapp2_result=$(cat webapp2_result.txt)
-          webapp2_result="${webapp2_result//$'\n'/\\n}"
+          webapp2_result=${webapp2_result//$'\n'/\\n}
+          webapp2_result=${webapp2_result//$'"'/'\"'}
           echo "::set-output name=result::$webapp2_result"
 
       - name: Get metrics of webapp3
@@ -132,7 +135,8 @@ jobs:
           ssh isucon@${{ steps.apply-terraform.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
           
           webapp3_result=$(cat webapp3_result.txt)
-          webapp3_result="${webapp3_result//$'\n'/\\n}"
+          webapp3_result=${webapp3_result//$'\n'/\\n}
+          webapp3_result=${webapp3_result//$'"'/'\"'}
           echo "::set-output name=result::$webapp3_result"
 
       - name: Destroy terraform

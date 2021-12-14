@@ -58,6 +58,7 @@ jobs:
           terraform_version: 1.1.0
 
       - name: Apply terraform
+        id: apply-terraform
         working-directory: ./terraform
         run: |
           echo 'allow_ssh_cidr = "0.0.0.0/0"' > terraform.tfvars
@@ -65,11 +66,19 @@ jobs:
           terraform validate
           terraform apply -auto-approve
 
+          bench_ip=$(cat terraform.tfstate | jq .outputs.bench_public_ip.value)
+          webapp1_ip=$(cat terraform.tfstate | jq .outputs.webapp1_public_ip.value)
+          webapp2_ip=$(cat terraform.tfstate | jq .outputs.webapp2_public_ip.value)
+          webapp3_ip=$(cat terraform.tfstate | jq .outputs.webapp3_public_ip.value)
+          echo "::set-output name=bench_ip::$bench_ip"
+          echo "::set-output name=webapp1_ip::$webapp1_ip"
+          echo "::set-output name=webapp2_ip::$webapp2_ip"
+          echo "::set-output name=webapp3_ip::$webapp3_ip"
+
       - name: Run bench
         id: bench
         run: |
-          bench_ip=$(cat terraform.tfstate | jq .outputs.bench_public_ip.value)
-          ssh isucon@${bench_ip} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
+          ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
 
           bench_result=$(cat bench_result.txt)
           bench_result="${bench_result//$'\n'/\\n}"
@@ -78,8 +87,7 @@ jobs:
       - name: Get metrics of webapp1
         id: webapp1
         run: |
-          webapp1_ip=$(cat terraform.tfstate | jq .outputs.webapp1_public_ip.value)
-          ssh isucon@${webapp1_ip} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
+          ssh isucon@$${{ steps.apply-terraform.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
           
           webapp1_result=$(cat webapp1_result.txt)
           webapp1_result="${webapp1_result//$'\n'/\\n}"
@@ -88,8 +96,7 @@ jobs:
       - name: Get metrics of webapp2
         id: webapp2
         run: |
-          webapp2_ip=$(cat terraform.tfstate | jq .outputs.webapp2_public_ip.value)
-          ssh isucon@${webapp2_ip} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
+          ssh isucon@{{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
           
           webapp2_result=$(cat webapp2_result.txt)
           webapp2_result="${webapp2_result//$'\n'/\\n}"
@@ -98,8 +105,7 @@ jobs:
       - name: Get metrics of webapp3
         id: webapp3
         run: |
-          webapp3_ip=$(cat terraform.tfstate | jq .outputs.webapp3_public_ip.value)
-          ssh isucon@${webapp3_ip} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
+          ssh isucon@{{ steps.apply-terraform.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
           
           webapp3_result=$(cat webapp3_result.txt)
           webapp3_result="${webapp3_result//$'\n'/\\n}"
@@ -107,6 +113,7 @@ jobs:
 
       - name: Destroy terraform
         if: always()
+        working-directory: ./terraform
         run: |
           terraform destroy -auto-approve
 

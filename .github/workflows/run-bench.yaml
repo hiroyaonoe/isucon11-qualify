@@ -180,6 +180,7 @@ jobs:
           ```
 
           </details>
+
           ### Alp of webapp1
           <details>
 
@@ -188,6 +189,7 @@ jobs:
           ```
 
           </details>
+
           ### Slow query of webapp2
           <details>
 
@@ -196,6 +198,7 @@ jobs:
           ```
           
           </details>
+
           ### Alp of webapp3
           <details>
 
@@ -204,6 +207,7 @@ jobs:
           ```
           
           </details>
+          
           "
           
           comment="${comment//$'\n'/\\n}"

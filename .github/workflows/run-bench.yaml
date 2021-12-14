@@ -78,7 +78,7 @@ jobs:
       - name: Run bench
         id: bench
         run: |
-          echo "::add-mask::{{ steps.apply-terraform.outputs.bench_ip }}"
+          echo "::add-mask::${{ steps.apply-terraform.outputs.bench_ip }}"
           ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
 
           bench_result=$(cat bench_result.txt)
@@ -88,7 +88,7 @@ jobs:
       - name: Get metrics of webapp1
         id: webapp1
         run: |
-          echo "::add-mask::{{ steps.apply-terraform.outputs.webapp1_ip }}"
+          echo "::add-mask::${{ steps.apply-terraform.outputs.webapp1_ip }}"
           ssh isucon@$${{ steps.apply-terraform.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
           
           webapp1_result=$(cat webapp1_result.txt)
@@ -98,7 +98,7 @@ jobs:
       - name: Get metrics of webapp2
         id: webapp2
         run: |
-          echo "::add-mask::{{ steps.apply-terraform.outputs.webapp2_ip }}"
+          echo "::add-mask::${{ steps.apply-terraform.outputs.webapp2_ip }}"
           ssh isucon@{{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
           
           webapp2_result=$(cat webapp2_result.txt)
@@ -108,7 +108,7 @@ jobs:
       - name: Get metrics of webapp3
         id: webapp3
         run: |
-          echo "::add-mask::{{ steps.apply-terraform.outputs.webapp3_ip }}"
+          echo "::add-mask::${{ steps.apply-terraform.outputs.webapp3_ip }}"
           ssh isucon@{{ steps.apply-terraform.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
           
           webapp3_result=$(cat webapp3_result.txt)

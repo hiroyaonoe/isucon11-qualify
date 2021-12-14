@@ -99,6 +99,7 @@ jobs:
               sleep 3
             done
           done
+          sleep 60
 
       - name: Run bench
         id: bench

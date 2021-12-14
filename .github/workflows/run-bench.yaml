@@ -77,6 +77,7 @@ jobs:
 
       # instanceを立てた直後はuser_dataのスクリプト実行が完了していない可能性があるので，adhocにsshの疎通確認をする
       - name: Check ssh
+        continue-on-error: true
         run: |
           bench_ip=${{ steps.apply-terraform.outputs.bench_ip }}
           webapp1_ip=${{ steps.apply-terraform.outputs.webapp1_ip }}
@@ -87,7 +88,9 @@ jobs:
           echo "::add-mask::$webapp2_ip"
           echo "::add-mask::$webapp3_ip"
           for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
+            echo $ip
             for i in `seq 5`; do
+              echo $i
               ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- :;
               if [ $? = 0 ]; then
                 break

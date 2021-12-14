@@ -93,7 +93,7 @@ jobs:
               if [ $result = 0 ]; then
                 break
               else
-                echo "Failed to ssh"
+                echo $result
               fi
               sleep 3
             done
@@ -194,7 +194,7 @@ jobs:
           </details>
           ### Alp of webapp3
           <details>
-          
+
           ```
           ${{ needs.run-bench.outputs.webapp3-result }}
           ```

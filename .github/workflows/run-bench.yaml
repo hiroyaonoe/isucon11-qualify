@@ -70,6 +70,10 @@ jobs:
           webapp1_ip=$(cat terraform.tfstate | jq .outputs.webapp1_public_ip.value | tr -d '"')
           webapp2_ip=$(cat terraform.tfstate | jq .outputs.webapp2_public_ip.value | tr -d '"')
           webapp3_ip=$(cat terraform.tfstate | jq .outputs.webapp3_public_ip.value | tr -d '"')
+          echo "::add-mask::$bench_ip"
+          echo "::add-mask::$webapp1_ip"
+          echo "::add-mask::$webapp2_ip"
+          echo "::add-mask::$webapp3_ip"
           echo "::set-output name=bench_ip::$bench_ip"
           echo "::set-output name=webapp1_ip::$webapp1_ip"
           echo "::set-output name=webapp2_ip::$webapp2_ip"
@@ -83,15 +87,10 @@ jobs:
           webapp1_ip=${{ steps.apply-terraform.outputs.webapp1_ip }}
           webapp2_ip=${{ steps.apply-terraform.outputs.webapp2_ip }}
           webapp3_ip=${{ steps.apply-terraform.outputs.webapp3_ip }}
-          echo "::add-mask::$bench_ip"
-          echo "::add-mask::$webapp1_ip"
-          echo "::add-mask::$webapp2_ip"
-          echo "::add-mask::$webapp3_ip"
           for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
-            echo $ip
             for i in `seq 5`; do
               echo $i
-              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- :;
+              ssh -q isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- :;
               if [ $? = 0 ]; then
                 break
               fi

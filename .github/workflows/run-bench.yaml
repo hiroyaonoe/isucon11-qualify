@@ -79,7 +79,7 @@ jobs:
           echo "::set-output name=webapp2_ip::$webapp2_ip"
           echo "::set-output name=webapp3_ip::$webapp3_ip"
 
-      # instanceを立てた直後はuser_dataのスクリプト実行が完了していない可能性があるので，adhocにsshの疎通確認をする
+      # instanceを立てた直後はuser_dataのスクリプト実行が完了していない可能性があるのでsshの疎通確認をする
       - name: Check ssh
         run: |
           bench_ip=${{ steps.apply-terraform.outputs.bench_ip }}
@@ -100,6 +100,7 @@ jobs:
             done
           done
           sleep 60
+      # jiaapi-mock.serviceがまだ動いておりベンチマークが作動しないのでadhocに60s待つ
 
       - name: Run bench
         id: bench

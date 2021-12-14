@@ -81,12 +81,12 @@ jobs:
 
       # instanceを立てた直後はuser_dataのスクリプト実行が完了していない可能性があるので，adhocにsshの疎通確認をする
       - name: Check ssh
-        continue-on-error: true
         run: |
           bench_ip=${{ steps.apply-terraform.outputs.bench_ip }}
           webapp1_ip=${{ steps.apply-terraform.outputs.webapp1_ip }}
           webapp2_ip=${{ steps.apply-terraform.outputs.webapp2_ip }}
           webapp3_ip=${{ steps.apply-terraform.outputs.webapp3_ip }}
+          sleep 5
           for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
             for i in `seq 5`; do
               echo $i

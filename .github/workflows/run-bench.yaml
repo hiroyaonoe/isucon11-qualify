@@ -210,7 +210,8 @@ jobs:
           EOF
           )
           
-          comment="${comment//$'\n'/\\n}"
+          comment=${comment//$'\n'/\\n}
+          comment=${comment//$'`'/'\`'}
           echo "::set-output name=comment::$comment"
 
       - name: Comment results

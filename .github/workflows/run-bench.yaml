@@ -126,6 +126,7 @@ jobs:
     needs: run-bench
     steps:
       - name: Get commit
+        if: always()
         uses: actions/github-script@v2
         id: get-target-commit
         with:
@@ -140,6 +141,7 @@ jobs:
             return pull_request.data.head.sha
 
       - name: Build result comment
+        if: always()
         id: comment
         run: |
           comment="
@@ -169,6 +171,7 @@ jobs:
           echo "::set-output name=comment::$comment"
 
       - name: Comment results
+        if: always()
         uses: actions/github-script@v2
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}

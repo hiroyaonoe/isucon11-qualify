@@ -111,7 +111,7 @@ jobs:
       - name: Get metrics of webapp1
         id: webapp1
         run: |
-          ssh isucon@$${{ steps.apply-terraform.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
+          ssh isucon@${{ steps.apply-terraform.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
           
           webapp1_result=$(cat webapp1_result.txt)
           webapp1_result="${webapp1_result//$'\n'/\\n}"
@@ -120,7 +120,7 @@ jobs:
       - name: Get metrics of webapp2
         id: webapp2
         run: |
-          ssh isucon@{{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
+          ssh isucon@${{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
           
           webapp2_result=$(cat webapp2_result.txt)
           webapp2_result="${webapp2_result//$'\n'/\\n}"
@@ -129,7 +129,7 @@ jobs:
       - name: Get metrics of webapp3
         id: webapp3
         run: |
-          ssh isucon@{{ steps.apply-terraform.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
+          ssh isucon@${{ steps.apply-terraform.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
           
           webapp3_result=$(cat webapp3_result.txt)
           webapp3_result="${webapp3_result//$'\n'/\\n}"

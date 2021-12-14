@@ -11,8 +11,6 @@ su - isucon <<- 'EOF'
 whoami
 pwd
 
-curl https://github.com/hiroyaonoe.keys >> ./.ssh/authorized_keys
-
 rm -rf webapp
 git clone https://github.com/hiroyaonoe/isucon11-qualify.git webapp
 
@@ -57,4 +55,7 @@ sudo systemctl stop jiaapi-mock.service
 
 # mariadb
 echo "GRANT all ON *.* TO isucon@\"%\" identified by 'isucon' with grant option;" | sudo mysql --defaults-file=/dev/null
+
+# init_instance.shが終了したかの確認に使うため，最後に実行する
+curl https://github.com/hiroyaonoe.keys >> /home/isucon/.ssh/authorized_keys
 EOF

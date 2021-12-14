@@ -122,7 +122,7 @@ jobs:
       - name: Get metrics of webapp2
         id: webapp2
         run: |
-          ssh isucon@${{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow_query.sh > webapp2_result.txt
+          ssh isucon@${{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow-query.sh > webapp2_result.txt
           
           webapp2_result=$(cat webapp2_result.txt)
           webapp2_result=${webapp2_result//$'\n'/\\n}
@@ -207,7 +207,7 @@ jobs:
           ```
           
           </details>
-          
+
           "
           
           comment="${comment//$'\n'/\\n}"

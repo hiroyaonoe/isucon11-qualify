@@ -20,8 +20,8 @@ jobs:
           go-version: ${{ matrix.go }}
       - name: Format Go
         run: | 
-          result=$(gofmt -l .)
-          if [ -n $result ]; then
+          result=$(gofmt -l . | wc -l)
+          if [ $result -ne 0 ]; then
             exit 1
           fi
 

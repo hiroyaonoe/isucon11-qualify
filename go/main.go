@@ -63,7 +63,7 @@ var (
 	postIsuConditionChan = make(chan IsuCondition, postIsuConditionChanCap)
 
 	cacheTrendResponse = []TrendResponse{}
-	cacheTrendError error
+	cacheTrendError    error
 )
 
 type Config struct {
@@ -94,14 +94,14 @@ type GetIsuListResponse struct {
 }
 
 type IsuCondition struct {
-	ID         int       `db:"id"`
-	JIAIsuUUID string    `db:"jia_isu_uuid"`
-	Timestamp  time.Time `db:"timestamp"`
-	IsSitting  bool      `db:"is_sitting"`
-	Condition  string    `db:"condition"`
-	ConditionLevel string `db:"condition_level"`
-	Message    string    `db:"message"`
-	CreatedAt  time.Time `db:"created_at"`
+	ID             int       `db:"id"`
+	JIAIsuUUID     string    `db:"jia_isu_uuid"`
+	Timestamp      time.Time `db:"timestamp"`
+	IsSitting      bool      `db:"is_sitting"`
+	Condition      string    `db:"condition"`
+	ConditionLevel string    `db:"condition_level"`
+	Message        string    `db:"message"`
+	CreatedAt      time.Time `db:"created_at"`
 }
 
 type MySQLConnectionEnv struct {
@@ -758,7 +758,7 @@ func getIsuIcon(c echo.Context) error {
 	}
 	var image []byte
 	image, err = loadIcon(jiaIsuUUID)
-	
+
 	c.Response().Header().Set("Cache-Control", "max-age=3600")
 
 	return c.Blob(http.StatusOK, "", image)
@@ -1277,12 +1277,12 @@ func postIsuCondition(c echo.Context) error {
 			return c.String(http.StatusBadRequest, "bad request body")
 		}
 		postIsuConditionChan <- IsuCondition{
-			JIAIsuUUID: jiaIsuUUID,
-			Timestamp: timestamp,
-			IsSitting: cond.IsSitting,
-			Condition: cond.Condition,
+			JIAIsuUUID:     jiaIsuUUID,
+			Timestamp:      timestamp,
+			IsSitting:      cond.IsSitting,
+			Condition:      cond.Condition,
 			ConditionLevel: cLevel,
-			Message: cond.Message,
+			Message:        cond.Message,
 		}
 	}
 
@@ -1296,7 +1296,7 @@ func insertIsuConditionByQueueing() {
 	for {
 		select {
 		case <-t.C:
-		case cond := <- postIsuConditionChan:
+		case cond := <-postIsuConditionChan:
 			isuConditionBuffer = append(isuConditionBuffer, cond)
 			if len(isuConditionBuffer) < postIsuConditionBatchSize {
 				continue

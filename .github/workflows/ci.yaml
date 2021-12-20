@@ -43,3 +43,7 @@ jobs:
           terraform_version: ${{ matrix.terraform }}
       - name: Format terraform
         run: terraform fmt -recursive -check
+      - name: Validate terraform
+        run: |
+          terraform init
+          terraform validate

@@ -12,7 +12,7 @@ whoami
 pwd
 
 rm -rf webapp
-git clone https://github.com/hiroyaonoe/isucon11-qualify.git webapp
+git clone https://github.com/hiroyaonoe/isucon11-qualify.git webapp -b ${git_branch_name}
 
 cd webapp
 pwd

@@ -61,6 +61,7 @@ jobs:
         working-directory: ./terraform
         run: |
           echo 'allow_ssh_cidr = "0.0.0.0/0"' > terraform.tfvars
+          echo 'git_branch_name = ${{ steps.get-target-branch.outputs.result }}' >> terraform.tfvars
           terraform init
           terraform validate
           terraform apply -auto-approve
@@ -104,11 +105,6 @@ jobs:
       - name: Run bench
         id: bench
         run: |
-          ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no <<- EOF
-          cd /home/isucon/webapp
-          git checkout origin/${{ steps.get-target-branch.outputs.result }}
-          git status
-          EOF
           ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
           bench_result=$(cat bench_result.txt)
           bench_result=${bench_result//$'\n'/\\n}

@@ -5,41 +5,38 @@
 https://github.com/hiroyaonoe/isucon11-qualify/pull/1
 
 ## MySQLのスロークエリログを出力
-https://github.com/hiroyaonoe/isucon11-qualify/pull/2
+https://github.com/hiroyaonoe/isucon11-qualify/pull/2  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/29
 
 ## pprofの導入
 https://github.com/hiroyaonoe/isucon11-qualify/pull/4
 
 ## isu_conditionテーブルにindexを貼る
-jia_isu_uuid, timestampにindexを貼るためにprimary keyを変更した．
+jia_isu_uuid, timestampにindexを貼るためにprimary keyを変更した．  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/7
 
 ## `POST /api/condition/:jia_isu_uuid`でバルクインサートを実装
-https://github.com/hiroyaonoe/isucon11-qualify/pull/10
+https://github.com/hiroyaonoe/isucon11-qualify/pull/10  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/32
 
 ## `GET /api/trend`のクエリにlimitをつける
 https://github.com/hiroyaonoe/isucon11-qualify/pull/14
 
 ## `GET /api/condition/:jia_isu_uuid`のクエリにlimitをつける
-ConditionLevelをinsert時に計算しておきDBに挿入することでlimitを取れるようにした．
-https://github.com/hiroyaonoe/isucon11-qualify/pull/24
+ConditionLevelをinsert時に計算しておきDBに挿入することでlimitを取れるようにした．  
+https://github.com/hiroyaonoe/isucon11-qualify/pull/24  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/26
-
-## `GET /api/isu/:jia_isu_uuid/graph`のクエリに検索条件を追加
-timestampによる絞り込みを行った．
 
 ## DBを２台目サーバーに移行
 https://github.com/hiroyaonoe/isucon11-qualify/pull/39
 
 ## `POST /api/condition/:jia_isu_uuid` でqueueingを実装
-https://github.com/hiroyaonoe/isucon11-qualify/pull/43
-https://github.com/hiroyaonoe/isucon11-qualify/pull/46
+https://github.com/hiroyaonoe/isucon11-qualify/pull/43  
+https://github.com/hiroyaonoe/isucon11-qualify/pull/46  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/50
 
 ## `GET /api/trend`のレスポンスをキャッシュ
-https://github.com/hiroyaonoe/isucon11-qualify/pull/48
+https://github.com/hiroyaonoe/isucon11-qualify/pull/48  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/60
 
 ## 不要なログ出力を削除
@@ -58,7 +55,7 @@ https://github.com/hiroyaonoe/isucon11-qualify/pull/64
 https://github.com/hiroyaonoe/isucon11-qualify/pull/65
 
 ## サーバー３台構成に変更
-`POST /api/condition/:jia_isu_uuid`の処理を３台目サーバーで行うようにした．
+`POST /api/condition/:jia_isu_uuid`の処理を３台目サーバーで行うようにした．  
 https://github.com/hiroyaonoe/isucon11-qualify/pull/70
 
 ## nginxとgoの間でunix domain socketを使用して通信

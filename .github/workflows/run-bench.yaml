@@ -61,7 +61,7 @@ jobs:
         working-directory: ./terraform
         run: |
           echo 'allow_ssh_cidr = "0.0.0.0/0"' > terraform.tfvars
-          echo 'git_branch_name = ${{ steps.get-target-branch.outputs.result }}' >> terraform.tfvars
+          echo 'git_branch_name = "${{ steps.get-target-branch.outputs.result }}"' >> terraform.tfvars
           terraform init
           terraform validate
           terraform apply -auto-approve

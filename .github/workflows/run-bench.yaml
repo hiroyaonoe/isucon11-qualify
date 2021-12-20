@@ -104,8 +104,12 @@ jobs:
       - name: Run bench
         id: bench
         run: |
-          ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
-
+          ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no <<- EOF
+          cd /home/isucon/webapp
+          git checkout origin/${{ steps.get-target-branch.outputs.result }}
+          git status
+          ./script/run-bench.sh > bench_result.txt
+          EOF
           bench_result=$(cat bench_result.txt)
           bench_result=${bench_result//$'\n'/\\n}
           echo "::set-output name=result::$bench_result"

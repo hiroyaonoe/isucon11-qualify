@@ -11,6 +11,11 @@ su - isucon <<- 'EOF'
 whoami
 pwd
 
+sudo apt -y update
+
+# Redis
+sudo apt -y install redis-server
+
 rm -rf webapp
 git clone https://github.com/hiroyaonoe/isucon11-qualify.git webapp -b ${git_branch_name}
 
@@ -49,6 +54,7 @@ pwd
 sudo systemctl restart isucondition.go.service
 sudo systemctl restart nginx.service
 sudo systemctl restart mysql.service
+sudo systemctl restart redis.service
 
 sudo systemctl disable jiaapi-mock.service
 sudo systemctl stop jiaapi-mock.service

@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-redis/redis/v8"
 	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
@@ -49,10 +50,12 @@ const (
 	postIsuConditionWaitTime    = 990 * time.Millisecond
 	cacheTrendInterval          = 1000 * time.Millisecond
 	socketFile                  = "/var/run/isucondition.sock"
+	redisUserPrefix             = "user-"
 )
 
 var (
 	db                  *sqlx.DB
+	rdb                 *redis.Client
 	sessionStore        sessions.Store
 	mySQLConnectionData *MySQLConnectionEnv
 
@@ -207,6 +210,15 @@ func (mc *MySQLConnectionEnv) ConnectDB() (*sqlx.DB, error) {
 	return sqlx.Open("mysql", dsn)
 }
 
+func ConnectRedis() *redis.Client {
+	addr := getEnv("REDIS_HOST", "127.0.0.1") + ":" + getEnv("REDIS_PORT", "6379")
+	return redis.NewClient(&redis.Options{
+		Addr:     addr,
+		Password: getEnv("REDIS_PASS", ""),
+		DB:       0,
+	})
+}
+
 func init() {
 	sessionStore = sessions.NewCookieStore([]byte(getEnv("SESSION_KEY", "isucondition")))
 
@@ -261,6 +273,8 @@ func main() {
 	db.SetMaxIdleConns(10000)
 	defer db.Close()
 
+	rdb = ConnectRedis()
+
 	postIsuConditionTargetBaseURL = os.Getenv("POST_ISUCONDITION_TARGET_BASE_URL")
 	if postIsuConditionTargetBaseURL == "" {
 		e.Logger.Fatalf("missing: POST_ISUCONDITION_TARGET_BASE_URL")
@@ -304,8 +318,12 @@ func getUserIDFromSession(c echo.Context) (string, int, error) {
 	}
 
 	jiaUserID := _jiaUserID.(string)
-	var count int
 
+	if _, err := rdb.Get(c.Request().Context(), redisUserPrefix+jiaUserID).Result(); err == nil {
+		return jiaUserID, 0, nil
+	}
+
+	var count int
 	err = db.Get(&count, "SELECT COUNT(*) FROM `user` WHERE `jia_user_id` = ?",
 		jiaUserID)
 	if err != nil {
@@ -399,10 +417,15 @@ func postAuthentication(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "invalid JWT payload")
 	}
 
-	_, err = db.Exec("INSERT IGNORE INTO user (`jia_user_id`) VALUES (?)", jiaUserID)
+	_, err = db.Exec("INSERT IGNORE INTO user (`jia_user_id`) VALUES (?)", jiaUserID) //
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	err = rdb.Set(c.Request().Context(), redisUserPrefix+jiaUserID, 1, 0).Err()
+	if err != nil {
+		c.Logger().Errorf("redis error: %v", err)
 	}
 
 	session, err := getSession(c.Request())

@@ -4,3 +4,6 @@ MYSQL_USER=isucon
 MYSQL_DBNAME=isucondition
 MYSQL_PASS=isucon
 POST_ISUCONDITION_TARGET_BASE_URL="https://isucondition-3.t.isucon.dev"
+REDIS_HOST="192.168.0.12"
+REDIS_PORT=6379
+REDIS_PASS=""

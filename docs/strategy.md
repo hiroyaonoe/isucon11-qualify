@@ -61,6 +61,11 @@ https://github.com/hiroyaonoe/isucon11-qualify/pull/70
 ## nginxとgoの間でunix domain socketを使用して通信
 https://github.com/hiroyaonoe/isucon11-qualify/pull/74
 
+## Userの存在確認にRedisのキャッシュを利用
+MySQLへのINSERTと同時にRedisに保存する．  
+GetするときはRedisに存在しなければMySQLからSELECTする．  
+https://github.com/hiroyaonoe/isucon11-qualify/pull/97
+
 # 参考
 - https://isucon.net/archives/56044867.html
 - https://isucon.net/archives/56082639.html

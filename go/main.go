@@ -21,13 +21,13 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-redis/redis/v8"
 	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	"github.com/go-redis/redis/v8"
 )
 
 const (
@@ -422,7 +422,7 @@ func postAuthentication(c echo.Context) error {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
-	
+
 	err = rdb.Set(c.Request().Context(), redisUserPrefix+jiaUserID, 1, 0).Err()
 	if err != nil {
 		c.Logger().Errorf("redis error: %v", err)

@@ -4,7 +4,7 @@ resource "aws_instance" "webapp1" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.11"
-  user_data              = data.template_file.init_instance_script.rendered
+  user_data              = file("${path.module}/init_instance.sh")
 
   tags = {
     Name = "terraform-webapp1"
@@ -17,7 +17,7 @@ resource "aws_instance" "webapp2" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.12"
-  user_data              = data.template_file.init_instance_script.rendered
+  user_data              = file("${path.module}/init_instance.sh")
 
   tags = {
     Name = "terraform-webapp2"
@@ -30,7 +30,7 @@ resource "aws_instance" "webapp3" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.13"
-  user_data              = data.template_file.init_instance_script.rendered
+  user_data              = file("${path.module}/init_instance.sh")
 
   tags = {
     Name = "terraform-webapp3"
@@ -43,7 +43,7 @@ resource "aws_instance" "bench" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.14"
-  user_data              = data.template_file.init_instance_script.rendered
+  user_data              = file("${path.module}/init_instance.sh")
 
   tags = {
     Name = "terraform-bench"

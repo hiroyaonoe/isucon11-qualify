@@ -1,0 +1,11 @@
+- name: Allow app to use unix domain socket
+  become: yes
+  file:
+    path: /var/run/
+    mode: '0777'
+
+- name: Restart nginx
+  become: yes
+  systemd:
+    name: nginx.service
+    state: restarted

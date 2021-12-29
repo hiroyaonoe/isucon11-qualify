@@ -56,16 +56,22 @@ jobs:
         with:
           terraform_version: 1.1.0
 
-      - name: Apply terraform
-        id: apply-terraform
+      - name: Validate terraform
         working-directory: ./terraform
         run: |
           echo 'allow_ssh_cidr = "0.0.0.0/0"' > terraform.tfvars
           echo 'git_branch_name = "${{ steps.get-target-branch.outputs.result }}"' >> terraform.tfvars
           terraform init
           terraform validate
-          terraform apply -auto-approve
 
+      - name: Apply terraform and ansible
+        run: |
+          make apply-instance
+
+      - name: Get ip addresses
+        id: get-ip-addresses
+        working-directory: ./terraform
+        run: |
           bench_ip=$(cat terraform.tfstate | jq .outputs.bench_public_ip.value | tr -d '"')
           webapp1_ip=$(cat terraform.tfstate | jq .outputs.webapp1_public_ip.value | tr -d '"')
           webapp2_ip=$(cat terraform.tfstate | jq .outputs.webapp2_public_ip.value | tr -d '"')
@@ -79,33 +85,10 @@ jobs:
           echo "::set-output name=webapp2_ip::$webapp2_ip"
           echo "::set-output name=webapp3_ip::$webapp3_ip"
 
-      # instanceを立てた直後はuser_dataのスクリプト実行が完了していない可能性があるのでsshの疎通確認をする
-      - name: Check ssh
-        run: |
-          bench_ip=${{ steps.apply-terraform.outputs.bench_ip }}
-          webapp1_ip=${{ steps.apply-terraform.outputs.webapp1_ip }}
-          webapp2_ip=${{ steps.apply-terraform.outputs.webapp2_ip }}
-          webapp3_ip=${{ steps.apply-terraform.outputs.webapp3_ip }}
-          for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
-            for i in `seq 10`; do
-              echo $i
-              result=0
-              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- : || result=$?
-              echo $result
-              if [ $result = 0 ]; then
-                echo "ok"
-                break
-              fi
-              sleep 3
-            done
-          done
-          sleep 60
-      # jiaapi-mock.serviceがまだ動いておりベンチマークが作動しないのでadhocに60s待つ
-
       - name: Run bench
         id: bench
         run: |
-          ssh isucon@${{ steps.apply-terraform.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
+          ssh isucon@${{ steps.get-ip-addresses.outputs.bench_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/run-bench.sh > bench_result.txt
           bench_result=$(cat bench_result.txt)
           bench_result=${bench_result//$'\n'/\\n}
           echo "::set-output name=result::$bench_result"
@@ -113,7 +96,7 @@ jobs:
       - name: Get metrics of webapp1
         id: webapp1
         run: |
-          ssh isucon@${{ steps.apply-terraform.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
+          ssh isucon@${{ steps.get-ip-addresses.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp1_result.txt
           
           webapp1_result=$(cat webapp1_result.txt)
           webapp1_result=${webapp1_result//$'\n'/\\n}
@@ -123,9 +106,9 @@ jobs:
         id: webapp2
         run: |
           echo "MySQL\n" > webapp2_result.txt
-          ssh isucon@${{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow-query-mysql.sh >> webapp2_result.txt
+          ssh isucon@${{ steps.get-ip-addresses.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow-query-mysql.sh >> webapp2_result.txt
           echo "\nRedis\n" >> webapp2_result.txt
-          ssh isucon@${{ steps.apply-terraform.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow-query-redis.sh >> webapp2_result.txt
+          ssh isucon@${{ steps.get-ip-addresses.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/slow-query-redis.sh >> webapp2_result.txt
           
           webapp2_result=$(cat webapp2_result.txt)
           webapp2_result=${webapp2_result//$'\n'/\\n}
@@ -134,7 +117,7 @@ jobs:
       - name: Get metrics of webapp3
         id: webapp3
         run: |
-          ssh isucon@${{ steps.apply-terraform.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
+          ssh isucon@${{ steps.get-ip-addresses.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./webapp/script/alp.sh > webapp3_result.txt
           
           webapp3_result=$(cat webapp3_result.txt)
           webapp3_result=${webapp3_result//$'\n'/\\n}

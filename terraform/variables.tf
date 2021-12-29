@@ -10,19 +10,6 @@ variable "isucon11q_ami" {
   default     = "ami-01730fadc0a1d1e1c"
 }
 
-variable "git_branch_name" {
-  description = "checkoutするブランチ名"
-  type        = string
-  default     = "master"
-}
-
-data "template_file" "init_instance_script" {
-  template = file("${path.module}/init_instance.tpl")
-  vars = {
-    git_branch_name = var.git_branch_name
-  }
-}
-
 variable "allow_ssh_cidr" {
   description = "sshを許可するIPアドレス"
   type        = string

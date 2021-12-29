@@ -63,7 +63,7 @@ jobs:
           echo 'git_branch_name = "${{ steps.get-target-branch.outputs.result }}"' >> terraform.tfvars
           terraform init
           terraform validate
-          terraform apply -auto-approve
+          terraform apply -auto-approve --parallelism=20
 
       - name: Get ip addresses
         id: get-ip-addresses

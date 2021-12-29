@@ -56,17 +56,14 @@ jobs:
         with:
           terraform_version: 1.1.0
 
-      - name: Validate terraform
+      - name: Apply terraform
         working-directory: ./terraform
         run: |
           echo 'allow_ssh_cidr = "0.0.0.0/0"' > terraform.tfvars
           echo 'git_branch_name = "${{ steps.get-target-branch.outputs.result }}"' >> terraform.tfvars
           terraform init
           terraform validate
-
-      - name: Apply terraform and ansible
-        run: |
-          make apply-instance
+          terraform apply -auto-approve
 
       - name: Get ip addresses
         id: get-ip-addresses
@@ -84,6 +81,30 @@ jobs:
           echo "::set-output name=webapp1_ip::$webapp1_ip"
           echo "::set-output name=webapp2_ip::$webapp2_ip"
           echo "::set-output name=webapp3_ip::$webapp3_ip"
+
+      # instanceを立てた直後はuser_dataのスクリプト実行が完了していない可能性があるのでsshの疎通確認をする
+      - name: Check ssh
+        run: |
+          bench_ip=${{ steps.apply-terraform.outputs.bench_ip }}
+          webapp1_ip=${{ steps.apply-terraform.outputs.webapp1_ip }}
+          webapp2_ip=${{ steps.apply-terraform.outputs.webapp2_ip }}
+          webapp3_ip=${{ steps.apply-terraform.outputs.webapp3_ip }}
+          for ip in $bench_ip $webapp1_ip $webapp2_ip $webapp3_ip; do
+            for i in `seq 10`; do
+              echo $i
+              result=0
+              ssh isucon@$ip -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -- : || result=$?
+              echo $result
+              if [ $result = 0 ]; then
+                echo "ok"
+                break
+              fi
+              sleep 3
+            done
+          done
+
+      - name: Run ansible-playbook
+        run: make ansible
 
       - name: Run bench
         id: bench

@@ -18,8 +18,11 @@ fmt: go-fmt terraform-fmt
 terraform:
 	cd terraform && terraform apply -auto-approve
 
-.PHONY:ansible-inventory
-ansible-inventory: terraform
+.PHONY:terraform-destroy
+terraform-destroy:
+	cd terraform && terraform destroy
+
+ansible/hosts:
 	cp ansible/hosts.sample ansible/hosts
 	sed -i -e "s/192.0.2.1/$(bench_ip)/" ansible/hosts
 	sed -i -e "s/192.0.2.2/$(webapp1_ip)/" ansible/hosts
@@ -27,12 +30,6 @@ ansible-inventory: terraform
 	sed -i -e "s/192.0.2.4/$(webapp3_ip)/" ansible/hosts
 
 .PHONY:ansible
-ansible: ansible-inventory
+ansible: ansible/hosts
 	cd ansible && ansible-playbook site.yaml -vv
 
-.PHONY:apply-instance
-apply-instance: ansible
-
-.PHONY:destroy-instance
-destroy-instance:
-	cd terraform && terraform destroy

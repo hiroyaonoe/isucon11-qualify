@@ -12,7 +12,8 @@
 ## 各ステップについての説明
 ### 1. Terraformを用いてAWSのリソースを作成する
 [`terraform`](../terraform)内のファイルを用いて，AWSのリソースを作成する．作成するインスタンスやネットワークの詳細は以下の通りである．
-![AWS](./aws.png)
+
+![AWS](./images/aws.png)
 
 ### 2. リソースが作成されたことを確認する
 EC2インスタンスの作成時にUserDataを用いてシェルスクリプト([`init_instance.tpl`](../terraform/init_instance.tpl))を実行している．(将来的にはAnsibleに書き換える予定)
@@ -29,4 +30,5 @@ sshによってベンチマークサーバーに接続し，ベンチマーク�
 
 ### 6. ベンチマークの結果・計測したデータなどを該当のPull Requestにコメントする
 ステップ3, 4で取得した各種データを該当のPull Requestにコメントする．
-![Comment](./comment.png)
+
+![Comment](./images/comment.png)

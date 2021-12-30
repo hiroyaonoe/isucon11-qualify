@@ -1,5 +1,11 @@
-variable "instance_type" {
-  description = "instance type"
+variable "webapp_instance_type" {
+  description = "webapp instance type"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "bench_instance_type" {
+  description = "bench instance type"
   type        = string
   default     = "t2.micro"
 }

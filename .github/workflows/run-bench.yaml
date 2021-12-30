@@ -51,6 +51,18 @@ jobs:
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
+
+      # このインスタンスには最初からAnsibleがインストールされているが，バージョンを2.9.xにしたいのでインストールし直す
+      - name: Setup Ansible
+        run: |
+          which ansible
+          ansible --version
+          sudo apt update -y
+          sudo apt install software-properties-common -y
+          sudo apt-add-repository --yes --update ppa:ansible/ansible
+          sudo apt install ansible -y
+          which ansible
+          ansible --version
       
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1

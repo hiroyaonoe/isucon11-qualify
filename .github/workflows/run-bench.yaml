@@ -56,8 +56,7 @@ jobs:
       # Ansibleのバージョンを下げるためにインストールし直す
       - name: Setup Ansible
         run: |
-          pip freeze
-          pip uninstall ansible ansible-core
+          ansible --version
           pip install ansible==2.9.27
           ansible --version
 

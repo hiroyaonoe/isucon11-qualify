@@ -1,7 +1,7 @@
 resource "aws_instance" "webapp1" {
   ami                    = var.isucon11q_ami
   vpc_security_group_ids = [aws_security_group.sg_allow_subnet.id, aws_security_group.sg_allow_ssh.id]
-  instance_type          = var.instance_type
+  instance_type          = var.webapp_instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.11"
   user_data              = file("${path.module}/init_instance.sh")
@@ -14,7 +14,7 @@ resource "aws_instance" "webapp1" {
 resource "aws_instance" "webapp2" {
   ami                    = var.isucon11q_ami
   vpc_security_group_ids = [aws_security_group.sg_allow_subnet.id, aws_security_group.sg_allow_ssh.id]
-  instance_type          = var.instance_type
+  instance_type          = var.webapp_instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.12"
   user_data              = file("${path.module}/init_instance.sh")
@@ -27,7 +27,7 @@ resource "aws_instance" "webapp2" {
 resource "aws_instance" "webapp3" {
   ami                    = var.isucon11q_ami
   vpc_security_group_ids = [aws_security_group.sg_allow_subnet.id, aws_security_group.sg_allow_ssh.id]
-  instance_type          = var.instance_type
+  instance_type          = var.webapp_instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.13"
   user_data              = file("${path.module}/init_instance.sh")
@@ -40,7 +40,7 @@ resource "aws_instance" "webapp3" {
 resource "aws_instance" "bench" {
   ami                    = var.isucon11q_ami
   vpc_security_group_ids = [aws_security_group.sg_allow_subnet.id, aws_security_group.sg_allow_ssh.id]
-  instance_type          = var.instance_type
+  instance_type          = var.bench_instance_type
   subnet_id              = aws_subnet.subnet.id
   private_ip             = "192.168.0.14"
   user_data              = file("${path.module}/init_instance.sh")

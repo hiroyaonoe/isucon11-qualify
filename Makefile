@@ -20,7 +20,7 @@ terraform:
 
 .PHONY:terraform-destroy
 terraform-destroy:
-	cd terraform && terraform destroy
+	cd terraform && terraform destroy -auto-approve
 
 ansible/hosts:
 	cp ansible/hosts.sample ansible/hosts

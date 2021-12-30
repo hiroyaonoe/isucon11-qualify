@@ -22,12 +22,16 @@ terraform:
 terraform-destroy:
 	cd terraform && terraform destroy -auto-approve
 
-ansible/hosts:
-	cp ansible/hosts.sample ansible/hosts
-	sed -i -e "s/192.0.2.1/$(bench_ip)/" ansible/hosts
-	sed -i -e "s/192.0.2.2/$(webapp1_ip)/" ansible/hosts
-	sed -i -e "s/192.0.2.3/$(webapp2_ip)/" ansible/hosts
-	sed -i -e "s/192.0.2.4/$(webapp3_ip)/" ansible/hosts
+ansible/hosts_tmp:
+	cp ansible/hosts.sample ansible/hosts_tmp
+	sed -i -e "s/192.0.2.1/$(bench_ip)/" ansible/hosts_tmp
+	sed -i -e "s/192.0.2.2/$(webapp1_ip)/" ansible/hosts_tmp
+	sed -i -e "s/192.0.2.3/$(webapp2_ip)/" ansible/hosts_tmp
+	sed -i -e "s/192.0.2.4/$(webapp3_ip)/" ansible/hosts_tmp
+
+ansible/hosts: ansible/hosts_tmp
+	cp ansible/hosts_tmp ansible/hosts
+	rm ansible/hosts_tmp
 
 .PHONY:ansible
 ansible: ansible/hosts

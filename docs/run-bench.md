@@ -1,4 +1,4 @@
-# Github Actions, Terraformによるベンチマーク・計測自動実行の仕組み
+# Terraform, Ansible, AWS, Github Actionsによるベンチマーク・計測自動実行の仕組み
 [`.github/workflows/run-bench.yaml`](../.github/workflows/run-bench.yaml)がやっていることについて説明する．
 ## 大まかな流れ
 ベンチマークを実行したいPull Requestで`/bench`とコメントすると以下が実行される
@@ -26,6 +26,6 @@ sshによってベンチマークサーバーに接続し，ベンチマーク�
 `terraform destroy`によってAWSリソースを削除する．このステップはこれ以前のステップが成功したか否かに関わらず，必ず実行する．
 
 ### 5. ベンチマークの結果・計測したデータなどを該当のPull Requestにコメントする
-ステップ3, 4で取得した各種データを該当のPull Requestにコメントする．
+ステップ2, 3で取得した各種データを該当のPull Requestにコメントする．
 
 ![Comment](./images/comment.png)

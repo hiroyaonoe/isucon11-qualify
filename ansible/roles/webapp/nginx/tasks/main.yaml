@@ -3,6 +3,7 @@
   file:
     path: /var/run/
     mode: '0777'
+    state: directory
 
 - name: Restart nginx
   become: yes

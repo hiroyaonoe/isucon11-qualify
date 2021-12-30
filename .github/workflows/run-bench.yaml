@@ -69,9 +69,9 @@ jobs:
       - name: Apply terraform
         working-directory: ./terraform
         run: |
-          echo 'allow_ssh_cidr = "0.0.0.0/0"' > terraform.tfvars
-          echo 'webapp_instance_type = "c5.large"' > terraform.tfvars
-          echo 'bench_instance_type = "c4.xlarge"' > terraform.tfvars
+          echo 'allow_ssh_cidr = "0.0.0.0/0"' >> terraform.tfvars
+          echo 'webapp_instance_type = "c5.large"' >> terraform.tfvars
+          echo 'bench_instance_type = "c4.xlarge"' >> terraform.tfvars
           terraform init
           terraform validate
           terraform apply -auto-approve --parallelism=20

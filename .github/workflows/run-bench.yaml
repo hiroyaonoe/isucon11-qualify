@@ -149,35 +149,35 @@ jobs:
       - name: Get other metrics of webapp1 for debug
         run: |
           ssh isucon@${{ steps.get-ip-addresses.outputs.webapp1_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no <<- EOF
-          echo 'NEXT-WEBAPP1----------------------------------------------------------------''
+          echo 'NEXT-WEBAPP1----------------------------------------------------------------'
           sudo journalctl -u isucondition.go.service || echo 'FAILED 1'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo journalctl -u nginx.service || echo 'FAILED 2'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo cat /var/log/nginx/error.log || echo 'FAILED 3'
           EOF
 
       - name: Get other metrics of webapp2 for debug
         run: |
           ssh isucon@${{ steps.get-ip-addresses.outputs.webapp2_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no <<- EOF
-          echo 'NEXT-WEBAPP2----------------------------------------------------------------''
+          echo 'NEXT-WEBAPP2----------------------------------------------------------------'
           sudo journalctl -u mysql.service || echo 'FAILED 1'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo cat /var/log/mysql/error.log || echo 'FAILED 2'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo journalctl -u redis.service || echo 'FAILED 3'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo cat /var/log/redis/redis-server.log || echo 'FAILED 4'
           EOF
 
       - name: Get other metrics of webapp3 for debug
         run: |
           ssh isucon@${{ steps.get-ip-addresses.outputs.webapp3_ip }} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no <<- EOF
-          echo 'NEXT-WEBAPP3----------------------------------------------------------------''
+          echo 'NEXT-WEBAPP3----------------------------------------------------------------'
           sudo journalctl -u isucondition.go.service || echo 'FAILED 1'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo journalctl -u nginx.service || echo 'FAILED 2'
-          echo 'NEXT----------------------------------------------------------------''
+          echo 'NEXT----------------------------------------------------------------'
           sudo cat /var/log/nginx/error.log || echo 'FAILED 3'
           EOF
 

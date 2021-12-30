@@ -35,5 +35,5 @@ ansible/hosts: ansible/hosts_tmp
 
 .PHONY:ansible
 ansible: ansible/hosts
-	cd ansible && ansible-playbook site.yaml -vv
+	cd ansible && ansible-playbook site.yaml -vv --ssh-extra-args '-o ControlMaster=auto -o ControlPersist=300s -o ForwardAgent=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 

@@ -52,6 +52,15 @@ jobs:
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
       
+      # https://github.com/hiroyaonoe/isucon11-qualify/issues/104
+      # Ansibleのバージョンを下げるためにインストールし直す
+      - name: Setup Ansible
+        run: |
+          pip freeze
+          pip uninstall ansible ansible-core
+          pip install ansible==2.9.27
+          ansible --version
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:

@@ -166,7 +166,7 @@ jobs:
           comment=$(cat << EOF
           # Benchmark Result
           ## Target Commit
-          https://github.com/${{ github.repository }}/commit/${{ jobs.run-bench.outputs.head-commit-hash }}
+          https://github.com/${{ github.repository }}/commit/${{ needs.run-bench.outputs.head-commit-hash }}
           ## Result
           ### Benchmark
           <details>

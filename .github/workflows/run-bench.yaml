@@ -57,6 +57,8 @@ jobs:
       - name: Setup Ansible
         run: |
           ansible --version
+          pip freeze
+          pip uninstall ansible ansible-core
           pip install ansible==2.9.27
           ansible --version
 

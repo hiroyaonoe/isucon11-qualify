@@ -15,6 +15,7 @@ jobs:
       webapp1-result: ${{ steps.webapp1.outputs.result }}
       webapp2-result: ${{ steps.webapp2.outputs.result }}
       webapp3-result: ${{ steps.webapp3.outputs.result }}
+      head-commit-hash: ${{ steps.get-commit-head.outputs.hash }}
 
     steps:
       - name: Get PR's branch
@@ -151,31 +152,21 @@ jobs:
         run: |
           terraform destroy -auto-approve
 
+      - name: Get commit HEAD
+        id: get-commit-head
+        run: echo "::set-output name=hash::$(git rev-parse HEAD)"
+
   comment-results:
     runs-on: ubuntu-latest
     needs: run-bench
     steps:
-      - name: Get commit
-        uses: actions/github-script@v2
-        id: get-target-commit
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
-          script: |
-            const pull_request = await github.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number
-            })
-            return pull_request.data.head.sha
-
       - name: Build result comment
         id: comment
         run: |
           comment=$(cat << EOF
           # Benchmark Result
           ## Target Commit
-          https://github.com/${{ github.repository }}/commit/${{ steps.get-target-commit.outputs.result }}
+          https://github.com/${{ github.repository }}/commit/${{ jobs.run-bench.outputs.head-commit-hash }}
           ## Result
           ### Benchmark
           <details>

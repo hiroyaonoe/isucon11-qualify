@@ -15,8 +15,6 @@
     src: /home/isucon/tmp/alp
     dest: /usr/local/bin
     mode: '0755'
-    owner: isucon
-    group: isucon
     remote_src: yes
 
 - name: Remove tmp dir

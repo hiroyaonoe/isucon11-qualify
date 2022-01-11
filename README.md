@@ -6,3 +6,4 @@ hiroyaonoeが[ISUCON11予選](https://github.com/isucon/isucon11-qualify)の問�
 ## Docs
 - [ベンチマーク・計測の自動化に関する説明](./docs/run-bench.md)  
 - [パフォーマンスチューニングのために行った施策一覧](./docs/strategy.md)  
+- [AWS, Terraform, Ansibleなどの技術を選んだ理由](.docs/tech-selection.md)
